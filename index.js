@@ -1,30 +1,35 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
-const connectDB = require('./config/db');
-const itemsRoutes = require('./routes/items'); // Ensure correct import
+const itemsRoutes = require('./routes/items'); // Ensure this path is correct
 
 const app = express();
-
-// Connect to Database
-connectDB();
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
 
 // Middleware
 app.use(express.json());
-app.use(cors());
 
 // Routes
-app.use('/api/items', itemsRoutes);
+app.use('/items', itemsRoutes);
 
-// Error Handling Middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Internal Server Error' });
-});
+// Connect to MongoDB
+const connectDB = async () => {
+    try {
+        await mongoose.connect(MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('MongoDB connected successfully');
+    } catch (error) {
+        console.error('MongoDB Connection Failed:', error.message);
+        process.exit(1); // Exit process with failure
+    }
+};
 
-// Start Server
-const PORT = process.env.PORT || 5000;
+connectDB();
+
+// Start server
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });

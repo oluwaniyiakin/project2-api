@@ -1,67 +1,50 @@
-const Item = require('../models/Items');
+const Item = require('../models/item'); // Ensure this model exists and is correct
 
-// @desc    Get all items
-// @route   GET /api/items
-const getItems = async (req, res) => {
+exports.getAllItems = async (req, res) => {
     try {
         const items = await Item.find();
-        res.status(200).json(items);
+        res.json(items);
     } catch (error) {
-        res.status(500).json({ error: 'Server error while fetching items' });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// @desc    Get a single item by ID
-// @route   GET /api/items/:id
-const getItem = async (req, res) => {
+exports.getItemById = async (req, res) => {
     try {
         const item = await Item.findById(req.params.id);
-        if (!item) return res.status(404).json({ error: 'Item not found' });
-        res.status(200).json(item);
+        if (!item) return res.status(404).json({ message: 'Item not found' });
+        res.json(item);
     } catch (error) {
-        res.status(500).json({ error: 'Server error while fetching item' });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// @desc    Create a new item
-// @route   POST /api/items
-const createItem = async (req, res) => {
+exports.createItem = async (req, res) => {
     try {
-        const { name, category, price, quantity } = req.body;
-        if (!name || !category || !price || !quantity) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
-
         const newItem = new Item(req.body);
         await newItem.save();
         res.status(201).json(newItem);
     } catch (error) {
-        res.status(500).json({ error: 'Server error while creating item' });
+        res.status(400).json({ message: error.message });
     }
 };
 
-// @desc    Update an item
-// @route   PUT /api/items/:id
-const updateItem = async (req, res) => {
+exports.updateItem = async (req, res) => {
     try {
         const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedItem) return res.status(404).json({ error: 'Item not found' });
-        res.status(200).json(updatedItem);
+        if (!updatedItem) return res.status(404).json({ message: 'Item not found' });
+        res.json(updatedItem);
     } catch (error) {
-        res.status(500).json({ error: 'Server error while updating item' });
+        res.status(400).json({ message: error.message });
     }
 };
 
-// @desc    Delete an item
-// @route   DELETE /api/items/:id
-const deleteItem = async (req, res) => {
+exports.deleteItem = async (req, res) => {
     try {
         const deletedItem = await Item.findByIdAndDelete(req.params.id);
-        if (!deletedItem) return res.status(404).json({ error: 'Item not found' });
-        res.status(200).json({ message: 'Item deleted successfully' });
+        if (!deletedItem) return res.status(404).json({ message: 'Item not found' });
+        res.json({ message: 'Item deleted successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Server error while deleting item' });
+        res.status(500).json({ message: error.message });
     }
 };
-
-module.exports = { getItems, getItem, createItem, updateItem, deleteItem };
