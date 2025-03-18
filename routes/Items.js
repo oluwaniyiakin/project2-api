@@ -20,7 +20,7 @@ router.post("/", createItem);
 // PUT update an existing item
 router.put("/:id", updateItem);
 
-// DELETE remove an item
+// DELETE removed an item
 router.delete("/:id", deleteItem);
 
 module.exports = router;
