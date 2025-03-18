@@ -1,0 +1,50 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Project2 API",
+      "description": "API for managing items",
+      "version": "1.0.0"
+    },
+    "host": "project2-api.onrender.com",
+    "schemes": ["https"],
+    "paths": {
+      "/api/items": {
+        "get": {
+          "summary": "Get all items",
+          "responses": {
+            "200": { "description": "Successful response" }
+          }
+        },
+        "post": {
+          "summary": "Create a new item",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "item",
+              "description": "Item data",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Item"
+              }
+            }
+          ],
+          "responses": {
+            "201": { "description": "Item created successfully" },
+            "400": { "description": "Validation error" }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "Item": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "price": { "type": "number" },
+          "quantity": { "type": "number" }
+        }
+      }
+    }
+  }
+  
