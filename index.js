@@ -4,28 +4,29 @@ const mongoose = require("mongoose");
 const swaggerUi = require("swagger-ui-express");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors"); // Allow cross-origin requests
 const itemsRoutes = require("./routes/items"); // Ensure this path is correct
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
-// Middleware
-app.use(express.json());
+// ✅ Middleware
+app.use(express.json()); // Parse JSON request bodies
+app.use(cors()); // Enable CORS
 
-// Load Swagger JSON
-const swaggerDocument = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "docs/swagger.json"), "utf8")
-);
+// ✅ Load Swagger JSON
+const swaggerPath = path.join(__dirname, "docs/swagger.json");
+const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, "utf8"));
 
-// Serve Swagger Docs
+// ✅ Serve Swagger Docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 console.log("📖 API Documentation available at: /api-docs");
 
-// Routes
-app.use("/items", itemsRoutes);
+// ✅ Routes
+app.use("/api/items", itemsRoutes); // Prefix `/api` for consistency
 
-// Connect to MongoDB
+// ✅ Connect to MongoDB
 const connectDB = async () => {
   try {
     await mongoose.connect(MONGO_URI, {
@@ -41,12 +42,12 @@ const connectDB = async () => {
 
 connectDB();
 
-// Root Route
+// ✅ Root Route
 app.get("/", (req, res) => {
   res.send("🚀 API is live and working!");
 });
 
-// Start server
+// ✅ Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
