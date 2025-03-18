@@ -15,6 +15,8 @@
       "/api/items": {
         "get": {
           "summary": "Get all items",
+          "description": "Retrieve a list of all available items",
+          "operationId": "getItems",
           "responses": {
             "200": {
               "description": "List of items",
@@ -24,7 +26,12 @@
                     {
                       "id": "660a9b3e86c9e6001c27b001",
                       "name": "Item 1",
-                      "price": 50
+                      "category": "Electronics",
+                      "price": 50,
+                      "description": "A high-quality electronic device",
+                      "quantity": 10,
+                      "createdAt": "2025-03-18T10:00:00.000Z",
+                      "updatedAt": "2025-03-18T10:00:00.000Z"
                     }
                   ]
                 }
@@ -34,58 +41,80 @@
         },
         "post": {
           "summary": "Create a new item",
+          "description": "Add a new item to the inventory",
+          "operationId": "createItem",
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
-                "example": {
-                  "name": "New Item",
-                  "price": 100
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string", "example": "New Item" },
+                    "category": { "type": "string", "example": "Electronics" },
+                    "price": { "type": "number", "example": 100 },
+                    "description": { "type": "string", "example": "A high-quality product" },
+                    "quantity": { "type": "integer", "example": 50 }
+                  },
+                  "required": ["name", "category", "price", "quantity"]
                 }
               }
             }
           },
           "responses": {
             "201": {
-              "description": "Item created",
+              "description": "Item created successfully",
               "content": {
                 "application/json": {
                   "example": {
                     "id": "660a9b3e86c9e6001c27b002",
                     "name": "New Item",
-                    "price": 100
+                    "category": "Electronics",
+                    "price": 100,
+                    "description": "A high-quality product",
+                    "quantity": 50,
+                    "createdAt": "2025-03-18T10:00:00.000Z",
+                    "updatedAt": "2025-03-18T10:00:00.000Z"
                   }
                 }
               }
             },
             "400": {
-              "description": "Invalid request"
+              "description": "Invalid request - missing required fields"
+            },
+            "500": {
+              "description": "Server error"
             }
           }
         }
       },
       "/api/items/{id}": {
         "get": {
-          "summary": "Get item by ID",
+          "summary": "Get an item by ID",
+          "description": "Retrieve a single item using its ID",
+          "operationId": "getItemById",
           "parameters": [
             {
               "name": "id",
               "in": "path",
               "required": true,
-              "schema": {
-                "type": "string"
-              }
+              "schema": { "type": "string" }
             }
           ],
           "responses": {
             "200": {
-              "description": "Item found",
+              "description": "Item retrieved successfully",
               "content": {
                 "application/json": {
                   "example": {
                     "id": "660a9b3e86c9e6001c27b001",
                     "name": "Item 1",
-                    "price": 50
+                    "category": "Electronics",
+                    "price": 50,
+                    "description": "A high-quality electronic device",
+                    "quantity": 10,
+                    "createdAt": "2025-03-18T10:00:00.000Z",
+                    "updatedAt": "2025-03-18T10:00:00.000Z"
                   }
                 }
               }
@@ -97,42 +126,53 @@
         },
         "put": {
           "summary": "Update an item",
+          "description": "Modify an existing item",
+          "operationId": "updateItem",
           "parameters": [
             {
               "name": "id",
               "in": "path",
               "required": true,
-              "schema": {
-                "type": "string"
-              }
+              "schema": { "type": "string" }
             }
           ],
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
-                "example": {
-                  "name": "Updated Item",
-                  "price": 120
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string", "example": "Updated Item" },
+                    "category": { "type": "string", "example": "Updated Category" },
+                    "price": { "type": "number", "example": 120 },
+                    "description": { "type": "string", "example": "Updated description" },
+                    "quantity": { "type": "integer", "example": 30 }
+                  }
                 }
               }
             }
           },
           "responses": {
             "200": {
-              "description": "Item updated",
+              "description": "Item updated successfully",
               "content": {
                 "application/json": {
                   "example": {
                     "id": "660a9b3e86c9e6001c27b001",
                     "name": "Updated Item",
-                    "price": 120
+                    "category": "Updated Category",
+                    "price": 120,
+                    "description": "Updated description",
+                    "quantity": 30,
+                    "createdAt": "2025-03-18T10:00:00.000Z",
+                    "updatedAt": "2025-03-18T10:00:00.000Z"
                   }
                 }
               }
             },
             "400": {
-              "description": "Invalid request"
+              "description": "Invalid request - missing fields"
             },
             "404": {
               "description": "Item not found"
@@ -141,19 +181,19 @@
         },
         "delete": {
           "summary": "Delete an item",
+          "description": "Remove an item from the inventory",
+          "operationId": "deleteItem",
           "parameters": [
             {
               "name": "id",
               "in": "path",
               "required": true,
-              "schema": {
-                "type": "string"
-              }
+              "schema": { "type": "string" }
             }
           ],
           "responses": {
             "200": {
-              "description": "Item deleted"
+              "description": "Item deleted successfully"
             },
             "404": {
               "description": "Item not found"
