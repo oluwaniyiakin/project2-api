@@ -29,6 +29,10 @@ const connectDB = async () => {
 
 connectDB();
 
+app.get("/", (req, res) => {
+    res.send("🚀 API is live and working!");
+  });
+  
 // Start server
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
