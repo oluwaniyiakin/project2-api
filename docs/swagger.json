@@ -1,48 +1,164 @@
 {
-    "swagger": "2.0",
+    "openapi": "3.0.0",
     "info": {
       "title": "Project2 API",
-      "description": "API for managing items",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "description": "API documentation for Project2"
     },
-    "host": "project2-api.onrender.com",
-    "schemes": ["https"],
+    "servers": [
+      {
+        "url": "https://project2-api-gatx.onrender.com",
+        "description": "Production Server"
+      }
+    ],
     "paths": {
       "/api/items": {
         "get": {
           "summary": "Get all items",
           "responses": {
-            "200": { "description": "Successful response" }
+            "200": {
+              "description": "List of items",
+              "content": {
+                "application/json": {
+                  "example": [
+                    {
+                      "id": "660a9b3e86c9e6001c27b001",
+                      "name": "Item 1",
+                      "price": 50
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         "post": {
           "summary": "Create a new item",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "New Item",
+                  "price": 100
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Item created",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": "660a9b3e86c9e6001c27b002",
+                    "name": "New Item",
+                    "price": 100
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid request"
+            }
+          }
+        }
+      },
+      "/api/items/{id}": {
+        "get": {
+          "summary": "Get item by ID",
           "parameters": [
             {
-              "in": "body",
-              "name": "item",
-              "description": "Item data",
+              "name": "id",
+              "in": "path",
               "required": true,
               "schema": {
-                "$ref": "#/definitions/Item"
+                "type": "string"
               }
             }
           ],
           "responses": {
-            "201": { "description": "Item created successfully" },
-            "400": { "description": "Validation error" }
+            "200": {
+              "description": "Item found",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": "660a9b3e86c9e6001c27b001",
+                    "name": "Item 1",
+                    "price": 50
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Item not found"
+            }
           }
-        }
-      }
-    },
-    "definitions": {
-      "Item": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "category": { "type": "string" },
-          "price": { "type": "number" },
-          "quantity": { "type": "number" }
+        },
+        "put": {
+          "summary": "Update an item",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Updated Item",
+                  "price": 120
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Item updated",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": "660a9b3e86c9e6001c27b001",
+                    "name": "Updated Item",
+                    "price": 120
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid request"
+            },
+            "404": {
+              "description": "Item not found"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete an item",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Item deleted"
+            },
+            "404": {
+              "description": "Item not found"
+            }
+          }
         }
       }
     }
