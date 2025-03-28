@@ -1,206 +1,207 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Project2 API",
-      "version": "1.0.0",
-      "description": "API documentation for Project2"
-    },
-    "servers": [
-      {
-        "url": "https://project2-api-gatx.onrender.com",
-        "description": "Production Server"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Project2 API",
+    "version": "1.0.0",
+    "description": "API documentation for Project2"
+  },
+  "servers": [
+    {
+      "url": "https://project2-api-gatx.onrender.com",
+      "description": "Production Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter your JWT token in the format: Bearer <token>"
       }
-    ],
-    "paths": {
-      "/api/items": {
-        "get": {
-          "summary": "Get all items",
-          "description": "Retrieve a list of all available items",
-          "operationId": "getItems",
-          "responses": {
-            "200": {
-              "description": "List of items",
-              "content": {
-                "application/json": {
-                  "example": [
-                    {
-                      "id": "660a9b3e86c9e6001c27b001",
-                      "name": "Item 1",
-                      "category": "Electronics",
-                      "price": 50,
-                      "description": "A high-quality electronic device",
-                      "quantity": 10,
-                      "createdAt": "2025-03-18T10:00:00.000Z",
-                      "updatedAt": "2025-03-18T10:00:00.000Z"
-                    }
-                  ]
-                }
-              }
-            }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/items": {
+      "get": {
+        "summary": "Get all items",
+        "description": "Retrieve a list of all available items",
+        "operationId": "getItems",
+        "security": [
+          {
+            "BearerAuth": []
           }
-        },
-        "post": {
-          "summary": "Create a new item",
-          "description": "Add a new item to the inventory",
-          "operationId": "createItem",
-          "requestBody": {
-            "required": true,
+        ],
+        "responses": {
+          "200": {
+            "description": "List of items",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": { "type": "string", "example": "New Item" },
-                    "category": { "type": "string", "example": "Electronics" },
-                    "price": { "type": "number", "example": 100 },
-                    "description": { "type": "string", "example": "A high-quality product" },
-                    "quantity": { "type": "integer", "example": 50 }
-                  },
-                  "required": ["name", "category", "price", "quantity"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "Item created successfully",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "id": "660a9b3e86c9e6001c27b002",
-                    "name": "New Item",
-                    "category": "Electronics",
-                    "price": 100,
-                    "description": "A high-quality product",
-                    "quantity": 50,
-                    "createdAt": "2025-03-18T10:00:00.000Z",
-                    "updatedAt": "2025-03-18T10:00:00.000Z"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Invalid request - missing required fields"
-            },
-            "500": {
-              "description": "Server error"
-            }
-          }
-        }
-      },
-      "/api/items/{id}": {
-        "get": {
-          "summary": "Get an item by ID",
-          "description": "Retrieve a single item using its ID",
-          "operationId": "getItemById",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": { "type": "string" }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Item retrieved successfully",
-              "content": {
-                "application/json": {
-                  "example": {
+                "example": [
+                  {
                     "id": "660a9b3e86c9e6001c27b001",
                     "name": "Item 1",
                     "category": "Electronics",
                     "price": 50,
                     "description": "A high-quality electronic device",
-                    "quantity": 10,
-                    "createdAt": "2025-03-18T10:00:00.000Z",
-                    "updatedAt": "2025-03-18T10:00:00.000Z"
+                    "quantity": 10
                   }
-                }
-              }
-            },
-            "404": {
-              "description": "Item not found"
-            }
-          }
-        },
-        "put": {
-          "summary": "Update an item",
-          "description": "Modify an existing item",
-          "operationId": "updateItem",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": { "type": "string" }
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": { "type": "string", "example": "Updated Item" },
-                    "category": { "type": "string", "example": "Updated Category" },
-                    "price": { "type": "number", "example": 120 },
-                    "description": { "type": "string", "example": "Updated description" },
-                    "quantity": { "type": "integer", "example": 30 }
-                  }
-                }
+                ]
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Item updated successfully",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "id": "660a9b3e86c9e6001c27b001",
-                    "name": "Updated Item",
-                    "category": "Updated Category",
-                    "price": 120,
-                    "description": "Updated description",
-                    "quantity": 30,
-                    "createdAt": "2025-03-18T10:00:00.000Z",
-                    "updatedAt": "2025-03-18T10:00:00.000Z"
-                  }
-                }
+          "401": {
+            "description": "Unauthorized - Token required"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new item",
+        "description": "Add a new item to the inventory",
+        "operationId": "createItem",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "New Item" },
+                  "category": { "type": "string", "example": "Electronics" },
+                  "price": { "type": "number", "example": 100 },
+                  "description": { "type": "string", "example": "A high-quality product" },
+                  "quantity": { "type": "integer", "example": 50 }
+                },
+                "required": ["name", "category", "price", "quantity"]
               }
-            },
-            "400": {
-              "description": "Invalid request - missing fields"
-            },
-            "404": {
-              "description": "Item not found"
             }
           }
         },
-        "delete": {
-          "summary": "Delete an item",
-          "description": "Remove an item from the inventory",
-          "operationId": "deleteItem",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": { "type": "string" }
+        "responses": {
+          "201": {
+            "description": "Item created successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Token required"
+          }
+        }
+      }
+    },
+    "/api/items/{id}": {
+      "get": {
+        "summary": "Get an item by ID",
+        "description": "Retrieve a single item using its ID",
+        "operationId": "getItemById",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Token required"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an item",
+        "description": "Modify an existing item",
+        "operationId": "updateItem",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Updated Item" },
+                  "category": { "type": "string", "example": "Updated Category" },
+                  "price": { "type": "number", "example": 120 },
+                  "description": { "type": "string", "example": "Updated description" },
+                  "quantity": { "type": "integer", "example": 30 }
+                }
+              }
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Item deleted successfully"
-            },
-            "404": {
-              "description": "Item not found"
-            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Token required"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an item",
+        "description": "Remove an item from the inventory",
+        "operationId": "deleteItem",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Token required"
+          },
+          "404": {
+            "description": "Item not found"
           }
         }
       }
     }
   }
-  
+}
