@@ -1,29 +1,16 @@
 const express = require("express");
-const passport = require("passport");
-const jwt = require("jsonwebtoken");
 const router = express.Router();
+const authController = require("../controllers/authController");
+const { verifyToken } = require("../middleware/authMiddleware");
 
-// 🔹 Google OAuth Login Route
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+// 🔹 Public routes (No authentication required)
+router.post("/register", authController.registerUser);  // User registration
+router.post("/login", authController.loginUser);        // User login
 
-// 🔹 Google OAuth Callback Route
-router.get(
-    "/google/callback",
-    passport.authenticate("google", { failureRedirect: "/" }),
-    (req, res) => {
-        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+// 🔹 Protected route (requires authentication)
+router.get("/profile", verifyToken, authController.getProfile); // Get user profile (secured)
 
-        res.cookie("token", token, { httpOnly: true, secure: true });
-        res.redirect("/dashboard"); // Redirect to a protected page
-    }
-);
-
-// 🔹 Logout Route
-router.get("/logout", (req, res) => {
-    res.clearCookie("token");
-    req.logout(() => {
-        res.redirect("/");
-    });
-});
+// 🔹 Logout (Optional: can be protected or public)
+router.post("/logout", authController.logoutUser);
 
 module.exports = router;

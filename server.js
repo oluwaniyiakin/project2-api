@@ -7,31 +7,41 @@ const passport = require("passport");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
-require("./config/passport"); // Import Passport config
-
+// Load environment variables
 dotenv.config();
+
+// Initialize Express app
 const app = express();
 
 // Middleware
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: true, credentials: true }));
 
+// Swagger API Docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // Initialize Passport
+require("./config/passport");
 app.use(passport.initialize());
 
-// Routes
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/items", require("./routes/items")); // ✅ Corrected to "items"
+// Import Routes
+const itemRoutes = require("./routes/items");
+
+// Use Routes
+app.use("/api/items", itemRoutes);
 
 // Connect to MongoDB
 mongoose
-    .connect(process.env.MONGO_URI)
+    .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("✅ MongoDB Connected"))
-    .catch((err) => console.log("❌ Error:", err));
+    .catch((err) => {
+        console.error("❌ MongoDB Connection Error:", err);
+        process.exit(1); // Exit process if database connection fails
+    });
 
-app.listen(process.env.PORT, () => {
-    console.log(`🚀 Server running on port ${process.env.PORT}`);
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
 });
